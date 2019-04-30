@@ -33,7 +33,7 @@ public class PeopleDailyTask {
 	@Autowired
 	private PeopleDailyService peopleDailyService;
 
-	@Scheduled(cron = "00 42 18 * * ?")
+	@Scheduled(cron = "00 00 00 * * ?")
 	public void excute() {
 		String[] paramValues = paramvalue.split(",");
 		for (String paramValue : paramValues) {

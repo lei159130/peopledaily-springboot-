@@ -43,7 +43,7 @@ public class ExecuteQueueThread extends Thread {
 			String jsonStr = PeopleDailyQueue.getInstance().poll();
 			if (StringUtils.isBlank(jsonStr)) {
 				exit = false;
-				PeopleDailyCache.set("startUp", false);
+				PeopleDailyCache.remove("startUp");
 				continue;
 			}
 			Map map = JsonUtils.fromJson(jsonStr, Map.class);
