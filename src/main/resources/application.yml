@@ -1,5 +1,5 @@
 spring:
-  profiles:    active:    - dev
+  profiles:    active:    - pro
       
 mybatis:
-  mapper-locations:  - classpath:mapper/*.xml
+  mapper-locations:  - classpath*:**/mapping/**/*Mapper.xml

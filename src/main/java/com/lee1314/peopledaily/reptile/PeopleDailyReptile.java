@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import com.lee1314.peopledaily.commons.cache.PeopleDailyCache;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.lee1314.peopledaily.commons.cache.ConfigCache;
+import com.lee1314.peopledaily.commons.cache.IdsCache;
 import com.lee1314.peopledaily.commons.queue.PeopleDailyQueue;
-import com.lee1314.peopledaily.utils.HttpRequestUtils;
-import com.lee1314.peopledaily.utils.JsonUtils;
+import com.lee1314.peopledaily.model.dto.PeopleDailyDto;
+import com.lee1314.peopledaily.utils.OkHttpUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 人民日报爬虫
@@ -23,16 +26,9 @@ import com.lee1314.peopledaily.utils.JsonUtils;
  * @date: 2018年12月29日 下午7:29:49
  *
  */
+@Slf4j
 @Component
 public class PeopleDailyReptile {
-
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
-	@Value("${peopledaily.listenListAPI}")
-	private String url;
-	@Value("${peopledaily.paramname}")
-	private String paramname;
-
 	/**
 	 * 查询多条数据
 	 * 
@@ -40,49 +36,46 @@ public class PeopleDailyReptile {
 	 * @param page
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void QueryLists(Integer code, Integer page) {
-		// 封装参数
+	public boolean QueryLists(String seminarId, Integer page) {
+		String url = ConfigCache.get("peopledaily_listenListAPI");
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("page", page.toString());
 		param.put("refresh_time", "0");
-		param.put(paramname, String.valueOf(code));
-		String result = HttpRequestUtils.doPost(url, param, null);
+		param.put(ConfigCache.get("peopledaily_paramname"), String.valueOf(seminarId));
 
-		logger.info("===={}?{}====>{}", url, param.toString(), result);
-
-		// 解析Result
-		Map<String, Object> map = JsonUtils.fromJson(result, Map.class);
-		Map<String, Object> res = (Map<String, Object>) map.get("result");
-		List<Map> data = (List<Map>) map.get("data");
-
-		// 错误处理
-		if (!"0".equals(res.get("errorCode"))) {
-			logger.error("==== {}?{}====>服务器返回错误!", url, param.toString());
-			return;
+		String result = OkHttpUtil.get(url, param);
+		if (StringUtils.isEmpty(result)) {
+			return false;
 		}
 
-		// 检测是否还有更多数据
-		PeopleDailyCache.set("havaMore" + code, res.get("have_more"));
+		JSONObject json = JSON.parseObject(result);
 
-		List<Integer> ids = (List) PeopleDailyCache.get("ids" + code);
+		JSONObject res = json.getJSONObject("result");
+		List<PeopleDailyDto> data = json.getJSONArray("data").toJavaList(PeopleDailyDto.class);
+
+		if (!"0".equals(res.getString("errorCode"))) {
+			log.error("==== {}?{}====>服务器返回错误!", url, param);
+			return false;
+		}
 
 		// 推送队列
-		for (Map obj : data) {
-			Integer id = Double.valueOf(obj.get("id").toString()).intValue();
-			if (ids.contains(id)) {
-				PeopleDailyCache.set("execute" + code, false);
-				continue;
+		for (PeopleDailyDto dto : data) {
+			if (IdsCache.get("ids" + seminarId).contains(Integer.parseInt(dto.getId()))) {
+				return false;
 			}
-			obj.put("seminarId", code);
+
+			dto.setSeminar_id(seminarId);
+			String jsonDto = JSON.toJSONString(dto);
 			try {
-				String jsonStr = JsonUtils.toJson(obj);
-				PeopleDailyQueue.getInstance().put(jsonStr);
-				logger.info("put queue:{}", jsonStr);
+				PeopleDailyQueue.getInstance().put(jsonDto);
+				log.info("put queue:{}", jsonDto);
 			} catch (InterruptedException e) {
+				log.error("put queue error:{}", jsonDto);
 				e.printStackTrace();
+				return false;
 			}
 		}
+		return res.getBoolean("have_more");
 	}
 
 }

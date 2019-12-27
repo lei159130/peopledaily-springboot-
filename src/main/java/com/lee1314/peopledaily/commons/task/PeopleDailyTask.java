@@ -1,48 +1,53 @@
 package com.lee1314.peopledaily.commons.task;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.lee1314.peopledaily.commons.cache.PeopleDailyCache;
-import com.lee1314.peopledaily.commons.thread.PeopleDailyThread;
+import com.lee1314.peopledaily.commons.cache.ConfigCache;
 import com.lee1314.peopledaily.reptile.PeopleDailyReptile;
-import com.lee1314.peopledaily.service.PeopleDailyService;
 
-/**
- * 爬虫定时器
- * 
- * @Title: PeopleDailyTask
- * @Description:
- * @author: 雷力
- * @date: 2019年1月22日 下午12:28:53
- *
- */
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class PeopleDailyTask {
-	Logger logger = LoggerFactory.getLogger(getClass());
-
-	@Value("${peopledaily.paramvalue}")
-	private String paramvalue;
-
 	@Autowired
 	private PeopleDailyReptile reptile;
-	@Autowired
-	private PeopleDailyService peopleDailyService;
 
 	@Scheduled(cron = "00 00 00 * * ?")
 	public void excute() {
-		String[] paramValues = paramvalue.split(",");
-		for (String paramValue : paramValues) {
-			int code = Integer.valueOf(paramValue);
-			PeopleDailyCache.set("haveMore" + code, true);
-			PeopleDailyCache.set("execute" + code, true);
-			PeopleDailyCache.set("ids" + code, peopleDailyService.findAllIds(code));
-			logger.info("开辟PeopleDailyThread{}", code);
-			new PeopleDailyThread(reptile, code).start();
+		String[] seminarIds = ConfigCache.get("peopledaily_paramvalue").split(",");
+		ExecutorService service = Executors.newCachedThreadPool();
+		for (String seminarId : seminarIds) {
+			log.info("开辟PeopleDailyThread{}", seminarId);
+			service.execute(new Thread("PeopleDailyThread" + seminarId) {
+				private ThreadLocal<Integer> page = new ThreadLocal<>();
+
+				@Override
+				public void run() {
+					while (!isInterrupted()) {
+						Integer page;
+						if (this.page.get() == null) {
+							page = 0;
+						} else {
+							page = this.page.get();
+						}
+
+						log.info("获取{}第{}页数据", seminarId, page);
+						boolean bool = reptile.QueryLists(seminarId, page++);
+						this.page.set(page);
+
+						if (!bool) {
+							interrupt();
+						}
+					}
+				}
+			});
 		}
+		service.shutdown();
 	}
 }

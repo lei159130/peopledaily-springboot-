@@ -1,12 +1,12 @@
 package com.lee1314.peopledaily.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lee1314.peopledaily.dao.PeopleDailyMapper;
+import com.lee1314.peopledaily.dao.mapper.PeopleDailyMapper;
+import com.lee1314.peopledaily.model.po.PeopleDailyPo;
 import com.lee1314.peopledaily.service.PeopleDailyService;
 
 /**
@@ -22,22 +22,25 @@ import com.lee1314.peopledaily.service.PeopleDailyService;
 public class PeopleDailyServiceImpl implements PeopleDailyService {
 
 	@Autowired
-	private PeopleDailyMapper Mapper;
+	private PeopleDailyMapper mapper;
 
 	@Override
-	public Integer batchInsert(List<Object> maps) {
-		return Mapper.batchInsert(maps);
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Integer insertByMap(Map map) {
-		return Mapper.insertByMap(map);
+	public Integer batchInsert(List<PeopleDailyPo> records) {
+		return mapper.batchInsert(records);
 	}
 
 	@Override
-	public List<Integer> findAllIds(Integer code) {
-		return Mapper.selectAllIds(code);
+	public List<Integer> findIdsBySeminarId(Integer seminarId) {
+		return mapper.selectIdsBySeminarId(seminarId);
 	}
 
+	@Override
+	public Integer insert(PeopleDailyPo record) {
+		return mapper.insert(record);
+	}
+
+	@Override
+	public PeopleDailyPo selectByPrimaryKey(Integer id) {
+		return mapper.selectByPrimaryKey(id);
+	}
 }

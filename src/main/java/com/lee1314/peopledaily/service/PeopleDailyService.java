@@ -1,7 +1,8 @@
 package com.lee1314.peopledaily.service;
 
 import java.util.List;
-import java.util.Map;
+
+import com.lee1314.peopledaily.model.po.PeopleDailyPo;
 
 /**
  * 人民日报Service
@@ -14,27 +15,11 @@ import java.util.Map;
  */
 public interface PeopleDailyService {
 
-	/**
-	 * 批量添加
-	 * 
-	 * @param data
-	 * @return
-	 */
-	Integer batchInsert(List<Object> data);
+	Integer batchInsert(List<PeopleDailyPo> records);
 
-	/**
-	 * 单挑添加
-	 * 
-	 * @param map
-	 */
-	@SuppressWarnings("rawtypes")
-	Integer insertByMap(Map map);
+	List<Integer> findIdsBySeminarId(Integer seminarId);
 
-	/**
-	 * 获取所有ID
-	 * 
-	 * @return
-	 */
-	List<Integer> findAllIds(Integer code);
+	Integer insert(PeopleDailyPo record);
 
+	PeopleDailyPo selectByPrimaryKey(Integer id);
 }
