@@ -37,7 +37,7 @@ public class SaveThread extends Thread {
 				log.error("take queue error");
 				json = null;
 				e.printStackTrace();
-				interrupt();
+				break;
 			}
 			if (StringUtils.isEmpty(json)) {
 				continue;

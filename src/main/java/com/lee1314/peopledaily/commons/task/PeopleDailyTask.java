@@ -42,7 +42,7 @@ public class PeopleDailyTask {
 						this.page.set(page);
 
 						if (!bool) {
-							interrupt();
+							break;
 						}
 					}
 				}
