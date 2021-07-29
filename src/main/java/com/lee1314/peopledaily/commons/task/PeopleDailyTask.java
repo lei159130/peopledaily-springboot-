@@ -35,7 +35,7 @@ public class PeopleDailyTask {
     }
 
 
-    @Scheduled(cron = "00 55 22 * * ?")
+    @Scheduled(cron = "00 00 00 * * ?")
     public void excute() {
         ExecutorService executors = null;
         try {
