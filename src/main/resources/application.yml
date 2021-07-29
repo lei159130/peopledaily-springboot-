@@ -1,5 +1,9 @@
 spring:
-  profiles:    active:    - pro
-      
+  application:
+    name: peopledaily
+  profiles:
+    active:
+      - dev
 mybatis:
-  mapper-locations:  - classpath*:**/mapping/**/*Mapper.xml
+  mapper-locations:
+    - classpath*:**/mapping/**/*Mapper.xml

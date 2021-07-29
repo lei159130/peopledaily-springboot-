@@ -1,11 +1,13 @@
 package com.lee1314.peopledaily.service;
 
-import java.util.List;
 
-import com.lee1314.peopledaily.model.po.SysConfigPo;
+import com.lee1314.peopledaily.entity.SysConfig;
 
+/**
+ * @author leili
+ */
 public interface SysConfigService {
 
-	List<SysConfigPo> selectByBusiness(String business);
+    SysConfig findByBusinessAndCode(String business, String code);
 
 }

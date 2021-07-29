@@ -1,25 +1,28 @@
 package com.lee1314.peopledaily.service;
 
+import com.lee1314.peopledaily.entity.PeopleDaily;
+
 import java.util.List;
 
-import com.lee1314.peopledaily.model.po.PeopleDailyPo;
 
 /**
- * 人民日报Service
- * 
- * @Title: PeopleDailyService
- * @Description:
- * @author: 雷力
- * @date: 2018年12月29日 下午7:30:14
- *
+ * @author leili
  */
 public interface PeopleDailyService {
 
-	Integer batchInsert(List<PeopleDailyPo> records);
+    /**
+     * 根据SeminarId查询所有id
+     *
+     * @param seminarId
+     * @return
+     */
+    List<Integer> findIdsBySeminarId(Integer seminarId);
 
-	List<Integer> findIdsBySeminarId(Integer seminarId);
-
-	Integer insert(PeopleDailyPo record);
-
-	PeopleDailyPo selectByPrimaryKey(Integer id);
+    /**
+     * 插入数据
+     *
+     * @param record
+     * @return
+     */
+    Integer insert(PeopleDaily record);
 }

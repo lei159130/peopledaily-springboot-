@@ -1,63 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lee1314.peopledaily.dao.mapper.PeopleDailyMapper" >
-  <resultMap id="BaseResultMap" type="com.lee1314.peopledaily.model.po.PeopleDailyPo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="audio_play_time" property="audioPlayTime" jdbcType="VARCHAR" />
-    <result column="audio_url" property="audioUrl" jdbcType="VARCHAR" />
-    <result column="comment_count" property="commentCount" jdbcType="INTEGER" />
-    <result column="share_url" property="shareUrl" jdbcType="VARCHAR" />
-    <result column="seminar_id" property="seminarId" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="LONGVARCHAR" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from people_daily
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.lee1314.peopledaily.model.po.PeopleDailyPo" >
-    insert into people_daily (id, title, audio_play_time, 
-      audio_url, comment_count, share_url, seminar_id, content
-      )
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{audioPlayTime,jdbcType=VARCHAR}, 
-      #{audioUrl,jdbcType=VARCHAR}, #{commentCount,jdbcType=INTEGER}, #{shareUrl,jdbcType=VARCHAR}, 
-      #{seminarId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.lee1314.peopledaily.model.po.PeopleDailyPo" >
-    update people_daily
-    set title = #{title,jdbcType=VARCHAR},
-      audio_play_time = #{audioPlayTime,jdbcType=VARCHAR},
-      audio_url = #{audioUrl,jdbcType=VARCHAR},
-      comment_count = #{commentCount,jdbcType=INTEGER},
-      share_url = #{shareUrl,jdbcType=VARCHAR},
-      seminar_id = #{seminarId,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select id, title, audio_play_time, audio_url, comment_count, share_url, 
-    seminar_id, content
-    from people_daily
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select id, title, audio_play_time, audio_url, comment_count, share_url, 
-    seminar_id, content
-    from people_daily
-  </select>
-  <insert id="batchInsert">
-  	insert into people_daily (id, title, audio_play_time, 
-      audio_url, comment_count, share_url, seminar_id, content
-      )
-    values
-    <foreach collection="list" item="record" open="(" separator="," close=")">
-      (#{record.id,jdbcType=INTEGER}, #{record.title,jdbcType=VARCHAR}, #{record.audioPlayTime,jdbcType=VARCHAR}, 
-      #{record.audioUrl,jdbcType=VARCHAR}, #{record.commentCount,jdbcType=INTEGER}, #{record.shareUrl,jdbcType=VARCHAR}, 
-      #{record.seminarId,jdbcType=INTEGER}, #{record.content,jdbcType=LONGVARCHAR})
-    </foreach> 
-  </insert>
-  <select id="selectIdsBySeminarId" resultType="java.lang.Integer"  parameterType="java.lang.Integer">
-  	SELECT id FROM people_daily WHERE seminar_id = #{seminarId,jdbcType=INTEGER}
-  </select>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lee1314.peopledaily.dao.mapper.PeopleDailyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lee1314.peopledaily.entity.PeopleDaily">
+        <id column="id" property="id" />
+        <result column="seminar_id" property="seminarId" />
+        <result column="title" property="title" />
+        <result column="admin_name" property="adminName" />
+        <result column="rongyun_id" property="rongyunId" />
+        <result column="unique_id" property="uniqueId" />
+        <result column="contents" property="contents" />
+        <result column="audio_url" property="audioUrl" />
+        <result column="audio_play_time" property="audioPlayTime" />
+        <result column="share_url" property="shareUrl" />
+        <result column="share_image" property="shareImage" />
+        <result column="show_image" property="showImage" />
+        <result column="share_title" property="shareTitle" />
+        <result column="description" property="description" />
+        <result column="news_time" property="newsTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, seminar_id, title, admin_name, rongyun_id, unique_id, contents, audio_url, audio_play_time, share_url, share_image, show_image, share_title, description, news_time
+    </sql>
+
 </mapper>

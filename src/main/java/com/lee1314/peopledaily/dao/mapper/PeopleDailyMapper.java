@@ -1,21 +1,24 @@
 package com.lee1314.peopledaily.dao.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lee1314.peopledaily.entity.PeopleDaily;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-import com.lee1314.peopledaily.model.po.PeopleDailyPo;
+/**
+ * <p>
+ * Mapper 接口
+ * </p>
+ *
+ * @author leili
+ * @since 2021-07-24
+ */
+@Repository
+public interface PeopleDailyMapper extends BaseMapper<PeopleDaily> {
 
-public interface PeopleDailyMapper {
-	Integer deleteByPrimaryKey(Integer id);
-
-	Integer insert(PeopleDailyPo record);
-
-	PeopleDailyPo selectByPrimaryKey(Integer id);
-
-	List<PeopleDailyPo> selectAll();
-
-	Integer updateByPrimaryKey(PeopleDailyPo record);
-
-	Integer batchInsert(List<PeopleDailyPo> records);
-
-	List<Integer> selectIdsBySeminarId(Integer seminarId);
+    @Select("SELECT id FROM people_daily WHERE seminar_id = #{seminarId,jdbcType=INTEGER}")
+    List<Integer> selectIdsBySeminarId(@Param("seminarId") Integer seminarId);
 }

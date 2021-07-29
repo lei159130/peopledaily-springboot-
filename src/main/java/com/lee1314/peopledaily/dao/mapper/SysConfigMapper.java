@@ -1,21 +1,18 @@
 package com.lee1314.peopledaily.dao.mapper;
 
-import java.util.List;
+import com.lee1314.peopledaily.entity.SysConfig;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
 
-import org.apache.ibatis.annotations.Param;
+/**
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author leili
+ * @since 2021-07-24
+ */
+@Repository
+public interface SysConfigMapper extends BaseMapper<SysConfig> {
 
-import com.lee1314.peopledaily.model.po.SysConfigPo;
-
-public interface SysConfigMapper {
-	int deleteByPrimaryKey(@Param("business") String business, @Param("code") String code);
-
-	int insert(SysConfigPo record);
-
-	SysConfigPo selectByPrimaryKey(@Param("business") String business, @Param("code") String code);
-
-	List<SysConfigPo> selectAll();
-
-	int updateByPrimaryKey(SysConfigPo record);
-
-	List<SysConfigPo> selectByBusiness(@Param("business") String business);
 }

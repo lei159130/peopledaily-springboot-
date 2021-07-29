@@ -1,47 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lee1314.peopledaily.dao.mapper.SysConfigMapper" >
-  <resultMap id="BaseResultMap" type="com.lee1314.peopledaily.model.po.SysConfigPo" >
-    <id column="business" property="business" jdbcType="VARCHAR" />
-    <id column="code" property="code" jdbcType="VARCHAR" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="modify_data" property="modifyData" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="map" >
-    delete from sys_config
-    where business = #{business,jdbcType=VARCHAR}
-      and code = #{code,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.lee1314.peopledaily.model.po.SysConfigPo" >
-    insert into sys_config (business, code, content, 
-      description, create_date, modify_data
-      )
-    values (#{business,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyData,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.lee1314.peopledaily.model.po.SysConfigPo" >
-    update sys_config
-    set content = #{content,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      modify_data = #{modifyData,jdbcType=TIMESTAMP}
-    where business = #{business,jdbcType=VARCHAR}
-      and code = #{code,jdbcType=VARCHAR}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map" >
-    select business, code, content, description, create_date, modify_data
-    from sys_config
-    where business = #{business,jdbcType=VARCHAR}
-      and code = #{code,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select business, code, content, description, create_date, modify_data
-    from sys_config
-  </select>
-  <select id="selectByBusiness" resultMap="BaseResultMap" >
-    select business, code, content, description, create_date, modify_data from sys_config where business = #{business,jdbcType=VARCHAR}
-  </select>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lee1314.peopledaily.dao.mapper.SysConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lee1314.peopledaily.entity.SysConfig">
+        <id column="business" property="business" />
+        <result column="code" property="code" />
+        <result column="content" property="content" />
+        <result column="description" property="description" />
+        <result column="create_date" property="createDate" />
+        <result column="modify_data" property="modifyData" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        business, code, content, description, create_date, modify_data
+    </sql>
+
 </mapper>
