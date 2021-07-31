@@ -36,7 +36,10 @@ public class SysConfigLoading implements CommandLineRunner {
             JSONObject obj = arrays.getJSONObject(i);
             Integer seminarId = obj.getInteger("id");
             String k = "collection:ids:" + seminarId;
-            redisTemplate.opsForSet().add(k, peopleDailyService.findIdsBySeminarId(seminarId).toArray(new Integer[]{}));
+            Integer[] ids = peopleDailyService.findIdsBySeminarId(seminarId).toArray(new Integer[]{});
+            if (ids.length > 0) {
+                redisTemplate.opsForSet().add(k, ids);
+            }
         }
     }
 }
