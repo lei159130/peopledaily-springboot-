@@ -54,6 +54,6 @@ public class OkHttpUtil {
     }
 
     public String get(String url) {
-        return get(url, true);
+        return get(url, false);
     }
 }

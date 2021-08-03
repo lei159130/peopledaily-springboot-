@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author leili
@@ -58,12 +59,12 @@ public class ProxyInfoServiceImpl implements ProxyInfoService {
                     if (proxys != null && !proxys.isEmpty()) {
                         ProxyInfoDto proxy = proxys.get(0);
                         long second = DateUtil.between(DateUtil.date(), proxy.getExpireTime(), DateUnit.SECOND);
-                        redisTemplate.opsForValue().set("system:proxy", proxy, second);
+                        redisTemplate.opsForValue().set("system:proxy", proxy, second, TimeUnit.SECONDS);
                         return proxy;
                     }
                 }
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                     return get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
